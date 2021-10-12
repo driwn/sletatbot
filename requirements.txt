@@ -1,0 +1,4 @@
+ aiogram
+ requests
+ Pillow
+ bs4
