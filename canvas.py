@@ -1,10 +1,7 @@
-
-from PIL import Image, ImageTk, EpsImagePlugin, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont
 
 from time import sleep
 import requests
-
-
 
 txt_bg = Image.open('img/backgrnd.png')
 logo = Image.open('img/s.png')
@@ -47,7 +44,7 @@ def make_a_pic_2(num=2, url='./img/img.jpg', text="123445677886"):
     if width < height:
         height = width
     # print(height, width)
-    font = ImageFont.truetype('Maler.ttf', round(height*0.08))
+    font = ImageFont.truetype('Maler.ttf', round(height * 0.08))
 
     new_img = Image.new("RGB", (height, height))
 
@@ -59,10 +56,11 @@ def make_a_pic_2(num=2, url='./img/img.jpg', text="123445677886"):
     new_img.paste(new_logo, (-5, 5), new_logo)
 
     new_img.paste(new_txt_bg, (round(height * v['bg_x']), round(height * v['bg_y'])), new_txt_bg)
-    draw.multiline_text((height//3.2,round(height*(v['bg_y']+0.05))), text, font=font, align='center', fill="#db9200")
-    
+    draw.multiline_text((height // 3.2, round(height * (v['bg_y'] + 0.05))), text, font=font, align='center',
+                        fill="#db9200")
+
     new_img.save("./img/new_img.jpg")
-    
+
     r = requests.post(
         "https://api.deepai.org/api/waifu2x",
         files={
@@ -72,4 +70,3 @@ def make_a_pic_2(num=2, url='./img/img.jpg', text="123445677886"):
     )
     print(r.json())
     return r.json()['output_url']
-
