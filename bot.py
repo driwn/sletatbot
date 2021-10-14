@@ -19,21 +19,52 @@ wait_pos = False
 wait_for_choose_photo = False
 wait_for_req = False
 
-# user chose
+# user choise
 num_of_photos = 5
 choosen_photo = None
 choosen_pose = None
 choosen_title = None
 
+button1 = types.KeyboardButton("Сверху")
+button2 = types.KeyboardButton("Посередине")
+
+markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).row(button1, button2)
+
+markup1 = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(types.KeyboardButton("/create"))
+
+inline_btn2 = types.InlineKeyboardButton("Пожертвовать", callback_data="share")
+inline_btn3 = types.InlineKeyboardButton("Заново", callback_data="again")
+
+inline_kb1 = types.InlineKeyboardMarkup().add(inline_btn2, inline_btn3)
+
+
+# query handlers
+@dp.callback_query_handler(lambda c: c.data == 'again')
+async def process_callback_again(callback_query: types.CallbackQuery):
+    g = globals()
+    g['wait_title'] = False
+    g['wait_pos'] = False
+    g['wait_for_choose_photo'] = False
+    g['wait_for_req'] = True
+    g['last_req'] = None
+    await bot.send_message(callback_query.from_user.id, 'Что вам найти?')
+    await bot.answer_callback_query(callback_query.id)
+
+
+@dp.callback_query_handler(lambda c: c.data == "share")
+async def process_callback_share(callback_query: types.CallbackQuery):
+    await bot.send_message(callback_query.from_user.id, 'Еще не сделал')
+    await bot.answer_callback_query(callback_query.id)
+
+
 
 # hello
 @dp.message_handler(commands=['start'])
 async def process_start_command(message: types.Message):
-    await message.reply('Приветствую')
+    await message.reply('Приветствую',reply_markup=markup1,reply=False)
     await bot.send_photo(message.from_user.id,
-                         'https://api.deepai.org/job-view-file/ad8c42f0-8bb5-4504-af3f-aa43f257a21e/outputs/output.png',
-                         "Пример ---  Введите /create чтобы"
-                         " начать")
+                         'https://api.deepai.org/job-view-file/0073cd5b-4a53-4d50-8239-7ce910681434/outputs/output.png',
+                         "Пример ---  Введите /create чтобы начать")
 
 
 # start process
@@ -64,7 +95,7 @@ async def create(message: types.Message):
 @dp.message_handler(commands=['more'])
 async def create(message: types.Message):
     g = globals()
-    if g['last_req'] is None or g['wait_for_choose_photo'] is False:
+    if g['last_req'] == None or g['wait_for_choose_photo'] == False:
         await bot.send_message(message.from_user.id, "Введите /create чтобы начать")
     else:
         g['num_of_photos'] += 5
@@ -121,47 +152,40 @@ async def take(message: types.Message):
     elif wait_title:
         g['wait_title'] = False
         g['wait_pos'] = True
-        if len(message.text) > 15:
-            g['wait_title'] = True
-            g['wait_pos'] = False
-            await bot.send_message(message.from_user.id, 'Cлишком длинная фраза\n /cancel чтобы сбросить')
-        else:
-            g['choosen_title'] = message.text
+        # print(message.text)
+        g['choosen_title'] = message.text
 
-            await bot.send_photo(message.from_user.id,
-                                 'https://api.deepai.org/job-view-file/63b76665-ba1d-4424-9efe-f22e38fa5a58/outputs/output.png',
-                                 1)
-            await bot.send_photo(message.from_user.id,
-                                 'https://api.deepai.org/job-view-file/8bc81d18-8c04-4396-8361-4e0549f318cc/outputs/output.png',
-                                 2)
-            await bot.send_photo(message.from_user.id,
-                                 'https://api.deepai.org/job-view-file/0fa9d190-1a7f-4b02-9666-c956be817d89/outputs/output.png',
-                                 3)
-            await bot.send_message(message.from_user.id, 'Где напишем?(1-3)\n /cancel чтобы сбросить')
+        await bot.send_photo(message.from_user.id,
+                             'https://api.deepai.org/job-view-file/6a1298f5-c071-4422-a916-11ebe0ca1165/outputs/output.png')
+        await bot.send_photo(message.from_user.id,
+                             'https://api.deepai.org/job-view-file/960dd8f1-98c5-4ebe-b04e-e9b30c7e0d36/outputs/output.png')
+        await message.reply("Где напишем?", reply_markup=markup,reply=False)
     elif wait_pos:
         g['wait_pos'] = False
         # try:
-        if message.text == '1' or message.text == '2' or message.text == '3' or message.text == '4':
-            g['choosen_pos'] = message.text
-            # shalay balalay
-            await bot.send_message(message.from_user.id, 'Происходит магия...')
-            pic_url = make_a_pic_2(num=int(g['choosen_pos']) - 1, text=g['choosen_title'])
-            await bot.send_photo(chat_id=message.from_user.id, photo=pic_url)
-            # await bot.send_photo(message.from_user.id, './img/new_img.jpg',
-            #                      'Cкачать\n /create чтобы начать заново')
-            g['wait_title'] = False
-            g['wait_pos'] = False
-            g['wait_for_choose_photo'] = False
-            g['wait_for_req'] = True
-            g['last_req'] = None
+        if message.text == 'Сверху':
+            num = 1
+        elif message.text == 'Посередине':
+            num = 2
         else:
             g['wait_pos'] = True
-            await bot.send_message(message.from_user.id, 'Укажите номер варианта\n /cancel чтобы сбросить')
-        # except:
-        #     g['wait_pos'] = True
-        #     await bot.send_message(message.from_user.id, 'Укажите номер варианта\n /cancel чтобы сбросить')
+            await message.reply("Где напишем?", reply_markup=markup,reply=False)
+        g['choosen_pos'] = num
+        # shalay balalay
+        await bot.send_message(message.from_user.id, 'Происходит магия...')
+        pic_url = make_a_pic_2(num=int(g['choosen_pos']) - 1, text=g['choosen_title'])
+        await bot.send_photo(chat_id=message.from_user.id, photo=pic_url)
+        await message.reply("Что дальше?", reply_markup=inline_kb1,reply=False)
+
+        # await bot.send_photo(message.from_user.id, './img/new_img.jpg',
+        #                      'Cкачать\n /create чтобы начать заново')
+        g['wait_title'] = False
+        g['wait_pos'] = False
+        g['wait_for_choose_photo'] = False
+        g['wait_for_req'] = True
+        g['last_req'] = None
     else:
-        await message.reply("Введите /create чтобы начать")
+        await message.reply("Введите /create чтобы начать",reply=False)
 
 
 if __name__ == '__main__':
