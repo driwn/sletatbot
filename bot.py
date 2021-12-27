@@ -188,5 +188,5 @@ async def take(message: types.Message):
         await message.reply("Введите /create чтобы начать",reply=False)
 
 
-if __name__ == '__main__':
-    executor.start_polling(dp)
+    if __name__ == '__main__':
+        executor.start_polling(dp)
