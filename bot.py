@@ -57,11 +57,10 @@ async def process_callback_share(callback_query: types.CallbackQuery):
     await bot.answer_callback_query(callback_query.id)
 
 
-
 # hello
 @dp.message_handler(commands=['start'])
 async def process_start_command(message: types.Message):
-    await message.reply('Приветствую',reply_markup=markup1,reply=False)
+    await message.reply('Приветствую', reply_markup=markup1, reply=False)
     await bot.send_photo(message.from_user.id,
                          'https://api.deepai.org/job-view-file/0073cd5b-4a53-4d50-8239-7ce910681434/outputs/output.png',
                          "Пример ---  Введите /create чтобы начать")
@@ -159,7 +158,7 @@ async def take(message: types.Message):
                              'https://api.deepai.org/job-view-file/6a1298f5-c071-4422-a916-11ebe0ca1165/outputs/output.png')
         await bot.send_photo(message.from_user.id,
                              'https://api.deepai.org/job-view-file/960dd8f1-98c5-4ebe-b04e-e9b30c7e0d36/outputs/output.png')
-        await message.reply("Где напишем?", reply_markup=markup,reply=False)
+        await message.reply("Где напишем?", reply_markup=markup, reply=False)
     elif wait_pos:
         g['wait_pos'] = False
         # try:
@@ -169,13 +168,13 @@ async def take(message: types.Message):
             num = 2
         else:
             g['wait_pos'] = True
-            await message.reply("Где напишем?", reply_markup=markup,reply=False)
+            await message.reply("Где напишем?", reply_markup=markup, reply=False)
         g['choosen_pos'] = num
         # shalay balalay
         await bot.send_message(message.from_user.id, 'Происходит магия...')
         pic_url = make_a_pic_2(num=int(g['choosen_pos']) - 1, text=g['choosen_title'])
         await bot.send_photo(chat_id=message.from_user.id, photo=pic_url)
-        await message.reply("Что дальше?", reply_markup=inline_kb1,reply=False)
+        await message.reply("Что дальше?", reply_markup=inline_kb1, reply=False)
 
         # await bot.send_photo(message.from_user.id, './img/new_img.jpg',
         #                      'Cкачать\n /create чтобы начать заново')
@@ -185,8 +184,7 @@ async def take(message: types.Message):
         g['wait_for_req'] = True
         g['last_req'] = None
     else:
-        await message.reply("Введите /create чтобы начать",reply=False)
+        await message.reply("Введите /create чтобы начать", reply=False)
 
-
-    if __name__ == '__main__':
-        executor.start_polling(dp)
+if __name__ == '__main__':
+    executor.start_polling(dp)
