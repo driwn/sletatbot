@@ -105,17 +105,6 @@ def make_a_pic_2(num=2, url='./img/img.jpg', text="123445677886"):
         more_h += round(height * 0.09)
         r+=1
 
-    # for i in range(len(text)):
-    #
-    #     new_img.paste(ch_bg_r, (round(height // 8+ i * round(height * 0.053)*f*s), more_h+round(height * (v['bg_y'] + 0.03))),ch_bg_r)
-    #     if i>11:
-    #         more_h=round(height*0.08)
-    # more_h = 0
-    # for i in range(len(text)):
-    #     draw.multiline_text((height//6+i*round(height*0.053)*f*s,more_h+round(height*(v['bg_y']+0.05))), text[i], font=font, align='center', fill="#db9200")
-    #     if i>11:
-    #         more_h=round(height*0.08)
-
 
     new_img.save("./img/new_img.jpg")
     # new_img.show()

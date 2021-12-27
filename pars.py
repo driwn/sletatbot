@@ -13,9 +13,5 @@ def pars(req='отель',ph=5):
         endOfUrl = s.find('"', nOURL + 6)
         url = s[nOURL + 6:endOfUrl]
         links.append(url)
-        # p = requests.get(url)
-        # # out = open('./img/'+str(i) + '.jpg', "wb")
-        # # out.write(p.content)
-        # # out.close()
 
     return links
